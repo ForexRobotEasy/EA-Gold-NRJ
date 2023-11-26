@@ -1,0 +1,127 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                            EA Gold NRJ          |
+//|                                      Developer: Forex Robot Easy Team|
+//|                                      Website: forexroboteasy.com |
+//+------------------------------------------------------------------+
+
+// Global variables
+int tradeMagicNumber = 123456; // Magic number for trade identification
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Check for high spread filter
+    if (IsSpreadHigh())
+    {
+        Print('Spread is too high. Waiting for optimal trading conditions.');
+        return;
+    }
+
+    // Check for news filter
+    if (IsNewsEvent())
+    {
+        Print('News event detected. Waiting for market stabilization.');
+        return;
+    }
+
+    // Check for existing open trades
+    if (CountOpenTrades() > 0)
+    {
+        Print('Existing trade is still open. Waiting for it to close.');
+        return;
+    }
+
+    // Check for time and day filters
+    if (!IsTradingTime())
+    {
+        Print('Not within trading hours. Waiting for appropriate time.');
+        return;
+    }
+
+    // Entry point filter
+    if (!IsOptimalEntryPoint())
+    {
+        Print('No optimal entry point found. Waiting for favorable market conditions.');
+        return;
+    }
+
+    // Open trade
+    if (OpenTrade())
+    {
+        Print('Trade successfully opened.');
+    }
+    else
+    {
+        Print('Failed to open trade. Please check trade conditions.');
+    }
+}
+
+//+------------------------------------------------------------------+
+//| Check if spread is too high                                      |
+//+------------------------------------------------------------------+
+bool IsSpreadHigh()
+{
+    double spread = MarketInfo(Symbol(), MODE_SPREAD);
+    return spread > 10; // Set the desired maximum spread value
+}
+
+//+------------------------------------------------------------------+
+//| Check if news event is in progress                               |
+//+------------------------------------------------------------------+
+bool IsNewsEvent()
+{
+    // Implement news event detection logic here
+    // Return true if a news event is in progress, otherwise false
+}
+
+//+------------------------------------------------------------------+
+//| Count the number of open trades                                  |
+//+------------------------------------------------------------------+
+int CountOpenTrades()
+{
+    int count = 0;
+    
+    for (int i = 0; i < OrdersTotal(); i++)
+    {
+        if (OrderSelect(i, SELECT_BY_POS, MODE_TRADES))
+        {
+            if (OrderSymbol() == Symbol() && OrderMagicNumber() == tradeMagicNumber)
+            {
+                count++;
+            }
+        }
+    }
+    
+    return count;
+}
+
+//+------------------------------------------------------------------+
+//| Check if current time is within trading hours                     |
+//+------------------------------------------------------------------+
+bool IsTradingTime()
+{
+    // Implement trading time logic here
+    // Return true if within trading hours, otherwise false
+}
+
+//+------------------------------------------------------------------+
+//| Check if optimal entry point is found                             |
+//+------------------------------------------------------------------+
+bool IsOptimalEntryPoint()
+{
+    // Implement entry point logic here
+    // Return true if optimal entry point found, otherwise false
+}
+
+//+------------------------------------------------------------------+
+//| Open a trade with specified parameters                           |
+//+------------------------------------------------------------------+
+bool OpenTrade()
+{
+    // Implement trade opening logic here
+    // Return true if trade successfully opened, otherwise false
+}
